@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Katuuu! 🎂❤️</title>
+    <style>
+        :root {
+            /* 🎨 BACKGROUND IMAGE SETUP */
+            --bg-image: url('our-background.jpg');
+            
+            --bg-color: #fff5f6;
+            --card-color: rgba(255, 255, 255, 0.94); 
+            --text-color: #4a4a4a;
+            --accent-color: #ff6b81;
+            --accent-hover: #ff4757;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            
+            background-image: linear-gradient(rgba(255, 245, 246, 0.65), rgba(255, 245, 246, 0.65)), var(--bg-image);
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: var(--bg-color);
+        }
+
+        /* --- 🔐 PASSWORD SCREEN OVERLAY --- */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 245, 246, 0.85), rgba(255, 245, 246, 0.85)), var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .password-box {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 107, 129, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 85%;
+            backdrop-filter: blur(5px);
+        }
+
+        .password-box h2 { color: var(--accent-color); margin-bottom: 10px; font-size: 1.8rem; }
+        .password-box p { font-size: 1rem; color: #7d7d7d; margin-bottom: 25px; }
+        .password-box input {
+            width: 80%; padding: 12px 20px; border: 2px solid #ffe0e5;
+            border-radius: 30px; font-size: 1rem; text-align: center;
+            outline: none; margin-bottom: 20px; transition: border-color 0.3s;
+        }
+        .password-box input:focus { border-color: var(--accent-color); }
+        .password-box button {
+            background-color: var(--accent-color); color: white; border: none;
+            padding: 12px 35px; font-size: 1rem; font-weight: 600; border-radius: 30px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 129, 0.3);
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .password-box button:hover { background-color: var(--accent-hover); transform: scale(1.03); }
+        #error-msg { color: var(--accent-hover); font-size: 0.9rem; margin-top: 10px; display: none; font-weight: 600; }
+
+        .password-step { transition: all 0.3s ease; }
+
+        /* --- 🎈 FLOATING HEART CLICK EFFECT --- */
+        .click-heart {
+            position: absolute;
+            pointer-events: none;
+            font-size: 20px;
+            animation: flyUp 1s ease-out forwards;
+            z-index: 9998;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--x)), calc(-50% - 150px)) scale(0); opacity: 0; }
+        }
+
+        /* --- 🌐 MAIN CONTENT SETUP --- */
+        #main-content {
+            opacity: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            transition: opacity 0.8s ease;
+        }
+
+        header { text-align: center; padding: 60px 20px 30px 20px; }
+        h1 { color: var(--accent-color); font-size: 2.8rem; margin-bottom: 5px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .subtitle { font-style: italic; font-size: 1.2rem; color: #555; margin-bottom: 25px; font-weight: 500; }
+
+        .countdown-container {
+            background: var(--card-color);
+            padding: 20px 40px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(255, 107, 129, 0.15);
+            display: inline-flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(5px);
+        }
+        .time-segment { text-align: center; min-width: 60px; }
+        .time-number { font-size: 2rem; font-weight: bold; color: var(--accent-color); display: block; }
+        .time-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #777; }
+
+        .container { max-width: 900px; width: 90%; margin-bottom: 40px; }
+
+        .message-box {
+            background: var(--card-color);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            text-align: center;
+            margin-bottom: 40px;
+            backdrop-filter: blur(5px);
+        }
+        .message-title { font-size: 1.4rem; color: var(--accent-color); margin-bottom: 15px; font-weight: 600; }
+        .custom-text { max-width: 700px; margin: 0 auto; text-align: left; line-height: 1.8; font-size: 1.1rem; color: #444; white-space: pre-line; }
+
+        /* --- ❓ INTERACTIVE QUIZ STYLES --- */
+        .quiz-container { text-align: center; margin: 20px auto; max-width: 500px; }
+        .quiz-question { font-size: 1.2rem; font-weight: 600; color: #333; margin-bottom: 20px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+        .quiz-opt-btn {
+            background-color: rgba(255,255,255,0.9); color: #555; border: 2px solid #ffe0e5;
+            padding: 12px 20px; font-size: 1rem; border-radius: 25px; cursor: pointer;
+            font-weight: 500; transition: all 0.2s ease;
+        }
+        .quiz-opt-btn:hover { border-color: var(--accent-color); background-color: #fff0f2; color: var(--accent-color); transform: translateY(-2px); }
+        .quiz-feedback { margin-top: 20px; font-size: 1.1rem; font-weight: 600; min-height: 25px; transition: color 0.3s ease; }
+
+        /* --- 🎡 INTERACTIVE CAPSULE MACHINE STYLES --- */
+        .capsule-btn {
+            background: linear-gradient(135deg, #ff6b81, #ff4757);
+            color: white; border: none; padding: 14px 30px; font-size: 1rem;
+            font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,107,129,0.4); margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .capsule-btn:active { transform: scale(0.95); }
+        .capsule-display {
+            min-height: 60px; font-size: 1.15rem; color: #4a4a4a;
+            font-style: italic; font-weight: 500; display: flex;
+            align-items: center; justify-content: center;
+            padding: 15px; border-radius: 10px; background: rgba(255, 240, 242, 0.9);
+            border: 1px dashed var(--accent-color);
+        }
+
+        /* --- 🗺️ CUSTOM MILESTONE TIMELINE STYLES --- */
+        .timeline {
+            position: relative; max-width: 650px; margin: 40px auto; padding-left: 30px; text-align: left;
+        }
+        .timeline::before {
+            content: ''; position: absolute; left: 9px; top: 5px; bottom: 5px; width: 2px; background: #ffe0e5;
+        }
+        .timeline-item { position: relative; margin-bottom: 45px; cursor: pointer; }
+        .timeline-dot {
+            position: absolute; left: -26px; top: 6px; width: 10px; height: 10px;
+            border-radius: 50%; background: #ccc; border: 4px solid var(--card-color);
+            box-shadow: 0 0 0 2px #ffe0e5; transition: background 0.3s;
+        }
+        .timeline-item.checked .timeline-dot { background: var(--accent-color); box-shadow: 0 0 0 2px var(--accent-color); }
+        .timeline-date { font-weight: bold; color: var(--accent-color); font-size: 1rem; margin-bottom: 8px; }
+        .timeline-content { font-size: 1.1rem; color: #555; transition: color 0.3s; margin-bottom: 12px; }
+        .timeline-item.checked .timeline-content { color: #111; font-weight: 500; }
+        
+        /* Cover photo styling inside timeline cards */
+        .timeline-cover-photo {
+            width: 100%;
+            max-width: 400px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 8px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .timeline-item:hover .timeline-cover-photo {
+            transform: scale(1.02);
+        }
+
+        .letter-btn {
+            background-color: var(--accent-color); color: white; border: none; padding: 15px 35px;
+            font-size: 1.1rem; font-weight: 600; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.4); transition: transform 0.2s, background-color 0.2s;
+        }
+        .letter-btn:hover { background-color: var(--accent-hover); transform: scale(1.05); }
+
+        .hidden-letter {
+            display: none; max-width: 650px; margin: 20px auto 0 auto; text-align: left;
+            line-height: 1.8; font-size: 1.1rem; color: #444; border-top: 1px dashed #eee; padding-top: 25px; white-space: pre-line;
+        }
+        .letter-close { display: block; margin: 25px auto 0 auto; background: none; border: none; color: #aaa; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+
+        .album-box { background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); overflow: hidden; min-height: 500px; margin-bottom: 40px; backdrop-filter: blur(5px); }
+        .section-title { font-size: 1.8rem; color: var(--accent-color); margin-top: 40px; margin-bottom: 20px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        /* --- 🖼️ LAST PHOTO MESSAGE OVERLAY SECTION --- */
+        .last-photo-message {
+            width: 90%;
+            max-width: 900px;
+            height: 450px;
+            margin: 40px auto 80px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('us.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .last-photo-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+        .last-photo-text {
+            font-size: 1.1rem;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            font-weight: 500;
+        }
+
+        footer { padding: 40px; font-size: 0.9rem; color: #666; text-align: center; font-weight: 500; }
+
+        /* --- 🎵 MUSIC VISUALIZER WAVE --- */
+        .visualizer {
+            display: flex; justify-content: center; gap: 4px; height: 30px; align-items: flex-end; margin-top: 15px;
+            opacity: 0.3; transition: opacity 0.3s ease;
+        }
+        .visualizer.playing { opacity: 1; }
+        .bar { width: 4px; height: 5px; background-color: var(--accent-color); border-radius: 2px; }
+        .playing .bar { animation: bounce 0.6s ease infinite alternate; }
+        .playing .bar:nth-child(2) { animation-delay: 0.1s; animation-duration: 0.4s; }
+        .playing .bar:nth-child(3) { animation-delay: 0.2s; animation-duration: 0.7s; }
+        .playing .bar:nth-child(4) { animation-delay: 0.3s; animation-duration: 0.5s; }
+        .playing .bar:nth-child(5) { animation-delay: 0.15s; animation-duration: 0.6s; }
+
+        @keyframes bounce { 0% { height: 5px; } 100% { height: 30px; } }
+    </style>
+    <!-- 🟢 SCRIPT LINK RELOCATED TO HEAD TO PREVENT INITIALIZATION ERRORS -->
+    <script src="https://cdn.jsdelivr.net/npm/publicalbum@latest/embed-ui.min.js" defer></script>
+</head>
+<body>
+
+    <!-- 🔐 PASSWORD GATE OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Halt! 🛑 Who goes there?</h2>
+            
+            <!-- QUESTION STEP 1 -->
+            <div id="step-1" class="password-step">
+                <p>To enter this secret place, please answer:<br><strong>What is Abhishek's absolute favorite nickname for you?</strong></p>
+                <input type="text" id="password-input-1" placeholder="Type answer here..." onkeydown="if(event.key === 'Enter') checkQuestionOne()">
+                <br>
+                <button onclick="checkQuestionOne()">Next Layer 🔐</button>
+            </div>
+
+            <!-- QUESTION STEP 2 -->
+            <div id="step-2" class="password-step" style="display: none;">
+                <p>Identity half-verified! Now for the final verification:<br><strong>How much do you love me?</strong></p>
+                <input type="text" id="password-input-2" placeholder="Type answer here..." onkeydown="if(event.key === 'Enter') checkQuestionTwo()">
+                <br>
+                <button onclick="checkQuestionTwo()">Unlock My Surprise ✨</button>
+            </div>
+
+            <p id="error-msg">❌ Oops! That's not it. Try again! 🤔</p>
+        </div>
+    </div>
+
+    <!-- 🎵 Audio Player -->
+    <audio id="bg-music" src="soundtrack.mp3" preload="auto" loop></audio>
+
+    <!-- 🌐 MAIN SITE CONTENT -->
+    <div id="main-content">
+        <header>
+            <h1>Happy Birthday Katuuu! 🎂❤️</h1>
+            <p class="subtitle">Celebrating the most beautiful person on her special day.</p>
+            
+            <p style="color: var(--accent-color); font-weight: 600; margin-bottom: 5px;">Time you've been blessing this earth: ✨</p>
+            <div class="countdown-container">
+                <div class="time-segment"><span class="time-number" id="days">00</span><span class="time-label">Days</span></div>
+                <div class="time-segment"><span class="time-number" id="hours">00</span><span class="time-label">Hours</span></div>
+                <div class="time-segment"><span class="time-number" id="minutes">00</span><span class="time-label">Mins</span></div>
+                <div class="time-segment"><span class="time-number" id="seconds">00</span><span class="time-label">Secs</span></div>
+            </div>
+
+            <div class="visualizer" id="wave-container">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+        </header>
+
+        <div class="container">
+            
+            <!-- CUSTOM MESSAGE PLACE #1 -->
+            <div class="message-box">
+                <div class="message-title">Happy Birthday, My Favorite Human ✨</div>
+                <div class="custom-text">
+                    Hey Katuuu, happy birthday! Writing this message here because I wanted a permanent place to remind you of how happy you make me. Look at how many thousands of days have passed on the clock above, and yet every single second with you feels like a gift. Have an amazing birthday today!
+                </div>
+            </div>
+
+            <!-- ❓ WIDGET: THE CUTE & FUNNY QUIZ GAME -->
+            <div class="message-box">
+                <div class="message-title">Time to test your memory, chinnima! 🤔👀</div>
+                <p style="color:#666; margin-top:-5px; font-size:0.95rem;">Choose wisely... I am watching you.</p>
+                
+                <div class="quiz-container">
+                    <div class="quiz-question" id="quiz-question-text">What do I love the most in you? ✨❤️</div>
+                    <div class="quiz-options">
+                        <button class="quiz-opt-btn" onclick="handleQuizAnswer('wrong-1')">A) Your eyes 👀✨</button>
+                        <button class="quiz-opt-btn" onclick="handleQuizAnswer('correct')">B) Your nose 👃💝</button>
+                        <button class="quiz-opt-btn" onclick="handleQuizAnswer('wrong-2')">C) Your head eh 🧠🤪</button>
+                    </div>
+                    <div class="quiz-feedback" id="quiz-feedback-box" style="margin-top: 15px; font-weight: bold; font-size: 1.1rem; min-height: 24px;"></div>
+                </div>
+            </div>
+
+            <!-- 🎡 WIDGET: REASONS I LOVE YOU MACHINE -->
+            <div class="message-box">
+                <div class="message-title">The Katuuu Capsule Machine 🎰</div>
+                <p style="color:#666; margin-top:-5px; font-size:0.95rem;">Click the button below to draw a sweet memory or a reason why I love you!</p>
+                <button class="capsule-btn" onclick="drawCapsule()">Draw a Heart Capsule 💖</button>
+                <div class="capsule-display" id="capsule-out">Click the button to open a message...</div>
+            </div>
+
+            <!-- 🗺️ CUSTOMIZED MILESTONE CHECKLIST -->
+            <div class="message-box">
+                <div class="message-title">Our Milestone Checklist 🗺️</div>
+                <p style="color:#666; margin-top:-5px; font-size:0.95rem;">Tap each circle to complete our trip down memory lane together!</p>
+                <div class="timeline">
+                    
+                    <!-- MILESTONE 1 -->
+                    <div class="timeline-item" onclick="this.classList.toggle('checked')">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">March 1 - 21</div>
+                        <div class="timeline-content">"If I fall for a guy, it would be you." 💖</div>
+                        <img class="timeline-cover-photo" src="march.jpg" alt="March Memory Photo">
+                    </div>
+                    
+                    <!-- MILESTONE 2 -->
+                    <div class="timeline-item" onclick="this.classList.toggle('checked')">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">May 26</div>
+                        <div class="timeline-content">Our first beautiful meet up right after dealing with typhoid! 🏥✨</div>
+                        <img class="timeline-cover-photo" src="may.jpg" alt="May Reunion Photo">
+                    </div>
+                    
+                    <!-- MILESTONE 3 -->
+                    <div class="timeline-item" onclick="this.classList.toggle('checked')">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">June 1</div>
+                        <div class="timeline-content">"Ahh idh emo okala undhi..." That unexplainable, amazing new feeling. 🥰</div>
+                        <img class="timeline-cover-photo" src="june1.jpg" alt="June 1 Vibe Photo">
+                    </div>
+                    
+                    <!-- MILESTONE 4 -->
+                    <div class="timeline-item" onclick="this.classList.toggle('checked')">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">June 6</div>
+                        <div class="timeline-content">Watch out! Puppy katuuu bite incident! 🐶🦴</div>
+                        <img class="timeline-cover-photo" src="june6.jpg" alt="Puppy Bite Photo">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CUSTOM MESSAGE PLACE #2: THE HIDDEN LOVE LETTER -->
+            <div class="message-box" id="message-container">
+                <button class="letter-btn" id="open-btn" onclick="toggleLetter()">Open My Hidden Birthday Letter ✉️</button>
+                
+                <div class="hidden-letter" id="love-letter">Dearest Katuuu,
+
+                  Happy Birthday to my love, the love of my life and my vanilla. You just walked in and turned my world into a rollercoaster of happiness. You brought the light and made it glow so bright that all we could see is only us and I got my-ah-Amor, sah-rahng, Laska, Ashaya who deserves this eternal love of mine.
+
+                  People like you are rare, so rare that only u and i are the only two remaining species on earth. Though we both are rare, u are even more special than me. U can't stop laughing when i start talking and i can't stop falling for u everytime u start laughing. People feel only the ones who are born are only actually blessed on their birthdays, but in our case i feel im more blessed to have u my chinnima.
+
+                  You know i love you katuuuma but i love you more than you know and will keep on loving u forever and ever and ever. U ARE MY FOREVER.
+ 
+                    Always and forever,
+                    Abhishek ❤️
+                    <button class="letter-close" onclick="toggleLetter()">Close Letter</button>
+                </div>
+            </div>
+
+            <!-- 📸 OUR MEMORIES SECTION -->
+            <h2 class="section-title">Our Memory Lane 📸</h2>
+            <div class="album-box">
+                <!-- 🛠️ ELEMENT ID ADDED FOR THE DYNAMIC INITIALIZATION RELOAD -->
+                <div id="my-google-photos-gallery" class="pa-gallery-player-widget" style="width:100%; height:480px; display:none;"
+                  data-link="https://photos.app.goo.gl/Vdq9L8PB9tYF7Zzm8"
+                  data-title="Our Journey Together 📸"
+                  data-description="Shared album · Tap to view!">
+                  <object data="https://lh3.googleusercontent.com/pw/AP1GczPg-RawnvLkAEANThtBRYiULcTDi2pHAG26i7oVNfg_Iohuw7KtWww-5BkKn-ELkw2ODt2kMe2Iq86sG1GNU1DDNrkyUlkFHdaPDfdUj4TH94IdynY=w1920-h1080"></object>
+                  <object data="https://lh3.googleusercontent.com/pw/AP1GczOQ9wYRHTnTqTNYBmu5MXXP-N_Xy5ASrO0o17SbDvwnxXObPi_MKXB7nUvfTLYJSIfLw1yHyRxhCsyl8aJi0Z0WQwAs-vgprX6SHrkHZip2NlMm4to=w1920-h1080"></object>
+                </div>
+            </div>
+
+        </div> <!-- End of container -->
+
+        <!-- 🖼️ LAST PHOTO OVERLAY MESSAGE BOX -->
+        <div class="last-photo-message">
+            <div class="last-photo-title">To My Forever and Always... ❤️</div>
+            <div class="last-photo-text">
+                Thank you for being you, Katuuuma.........Looking back at our memories makes me realize how incredibly blessed I am. Here is to celebrating you today, tomorrow, and for all the birthdays still to come.Remember if u get confused take a sec but always come back to me We made memories and we will make a lot more. I love you to the moon and back!  MY CHINNIMA 💖✨
+            </div>
+        </div>
+
+    </div> <!-- End of main content -->
+
+    <footer>
+        Made with ❤️ by Abhishek for Katuuu. All rights reserved &copy; 2026.
+    </footer>
+
+    <!-- 🛠️ SITE FUNCTIONALITY SCRIPT -->
+    <script>
+        const START_DATE = new Date("2003-06-16T00:00:00"); 
+
+        const CAPSULES = [
+            "You are the most beautiful chapter in my life story. 📖❤️",
+            "Every day with you feels like a beautiful dream I never want to wake up from. ✨",
+            "You have this magical way of making my heart skip a beat with just a smile. 💓",
+            "Of all the people on Earth, I'm the luckiest one because I have you. 🌍✨",
+            "You are my safe haven, my peace, and my greatest adventure all in one. 🏹💝",
+            "Loving you is the easiest and most natural thing I have ever done. 🥰",
+            "You are the light that brightens up my darkest days. ☀️❤️",
+            "My heart is, and always will be, completely yours, Katuuu. 🔒💖",
+            "You're not just my love—you are my entire universe. 🌌💞",
+            "I love you for everything you are, everything you've been, and everything you're yet to be. ✨"
+        ];
+
+        /* SECURITY GATE: CHECK QUESTION 1 */
+        function checkQuestionOne() {
+            const input = document.getElementById('password-input-1').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === "Katuuu") {
+                errorMsg.style.display = 'none';
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('step-2').style.display = 'block';
+                document.getElementById('password-input-2').focus();
+            } else {
+                errorMsg.innerText = "❌ Oops! That's not it. Hint: Try typing 'Katuuu' with the exact caps! 🤔";
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        /* SECURITY GATE: CHECK QUESTION 2 */
+        function checkQuestionTwo() {
+            const input = document.getElementById('password-input-2').value.trim().toLowerCase().replace(/\s+/g, '');
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input === "2kg") {
+                errorMsg.style.display = 'none';
+                const overlay = document.getElementById('password-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    const mainContent = document.getElementById('main-content');
+                    mainContent.style.display = 'flex';
+                    setTimeout(() => { 
+                        mainContent.style.opacity = '1'; 
+                        // 🟢 FORCES GOOGLE PHOTOS TO LOAD DYNAMICALLY ONCE VISIBLE
+                        if(window.PA && window.PA.Player) {
+                            window.PA.Player.init(document.getElementById('my-google-photos-gallery'));
+                        }
+                    }, 50);
+                    startBlessingCounter();
+                    playMusic();
+                }, 500);
+            } else {
+                errorMsg.innerText = "❌ Hmmm, that's not how much! Think of the exact weight you always tell me... ⚖️❤️";
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function playMusic() {
+            const audio = document.getElementById('bg-music');
+            const visualizer = document.getElementById('wave-container');
+            audio.play().then(() => {
+                visualizer.classList.add('playing');
+            }).catch((err) => {
+                console.log("Audio waiting for explicit user interaction.");
+            });
+        }
+
+        function startBlessingCounter() {
+            setInterval(() => {
+                const now = new Date();
+                const difference = now - START_DATE;
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        function handleQuizAnswer(status) {
+            const feedback = document.getElementById('quiz-feedback-box');
+            if (status === 'correct') {
+                feedback.innerText = "🎉 eee katuuuma! Your nose is literally my favorite thing in the whole world... it's the cutest! 🥰❤️";
+                feedback.style.color = "green";
+            } else if (status === 'wrong-1') {
+                feedback.innerText = "❌ pichiiiii! Your eyes are absolutely beautiful, but nope, not the #1 spot! Guess again! 😉";
+                feedback.style.color = "#d9534f"; 
+            } else {
+                feedback.innerText = "❌ mental! Your head eh?! What does that even mean? 😂 Try again! 😜";
+                feedback.style.color = "#d9534f"; 
+            }
+        }
+
+        function drawCapsule() {
+            const display = document.getElementById('capsule-out');
+            display.style.opacity = '0';
+            setTimeout(() => {
+                const randomMsg = CAPSULES[Math.floor(Math.random() * CAPSULES.length)];
+                display.innerText = randomMsg;
+                display.style.opacity = '1';
+            }, 200);
+        }
+
+        function toggleLetter() {
+            const letter = document.getElementById('love-letter');
+            const btn = document.getElementById('open-btn');
+            if (letter.style.display === "block") {
+                letter.style.display = "none";
+                btn.style.display = "inline-block";
+            } else {
+                letter.style.display = "block";
+                btn.style.display = "none";
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+
+            const heart = document.createElement('div');
+            heart.classList.add('click-heart');
+            heart.innerText = '💖';
+            heart.style.left = `${e.pageX}px`;
+            heart.style.top = `${e.pageY}px`;
+            
+            const randomX = Math.floor(Math.random() * 100) - 50;
+            heart.style.setProperty('--x', `${randomX}px`);
+
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 1000);
+        });
+    </script>
+</body>
+</html>
