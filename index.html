@@ -216,7 +216,7 @@
         }
         .letter-close { display: block; margin: 25px auto 0 auto; background: none; border: none; color: #aaa; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
 
-        .album-box { background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); overflow: hidden; min-height: 500px; margin-bottom: 40px; backdrop-filter: blur(5px); }
+        .album-box { background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); overflow: hidden; min-height: auto; margin-bottom: 40px; backdrop-filter: blur(5px); }
         .section-title { font-size: 1.8rem; color: var(--accent-color); margin-top: 40px; margin-bottom: 20px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         /* --- 🖼️ LAST PHOTO MESSAGE OVERLAY SECTION --- */
@@ -273,8 +273,6 @@
 
         @keyframes bounce { 0% { height: 5px; } 100% { height: 30px; } }
     </style>
-    <!-- 🟢 SCRIPT LINK RELOCATED TO HEAD TO PREVENT INITIALIZATION ERRORS -->
-    <script src="https://cdn.jsdelivr.net/npm/publicalbum@latest/embed-ui.min.js" defer></script>
 </head>
 <body>
 
@@ -420,15 +418,23 @@
 
             <!-- 📸 OUR MEMORIES SECTION -->
             <h2 class="section-title">Our Memory Lane 📸</h2>
-            <div class="album-box">
-                <!-- 🛠️ ELEMENT ID ADDED FOR THE DYNAMIC INITIALIZATION RELOAD -->
-                <div id="my-google-photos-gallery" class="pa-gallery-player-widget" style="width:100%; height:480px; display:none;"
-                  data-link="https://photos.app.goo.gl/Vdq9L8PB9tYF7Zzm8"
-                  data-title="Our Journey Together 📸"
-                  data-description="Shared album · Tap to view!">
-                  <object data="https://lh3.googleusercontent.com/pw/AP1GczPg-RawnvLkAEANThtBRYiULcTDi2pHAG26i7oVNfg_Iohuw7KtWww-5BkKn-ELkw2ODt2kMe2Iq86sG1GNU1DDNrkyUlkFHdaPDfdUj4TH94IdynY=w1920-h1080"></object>
-                  <object data="https://lh3.googleusercontent.com/pw/AP1GczOQ9wYRHTnTqTNYBmu5MXXP-N_Xy5ASrO0o17SbDvwnxXObPi_MKXB7nUvfTLYJSIfLw1yHyRxhCsyl8aJi0Z0WQwAs-vgprX6SHrkHZip2NlMm4to=w1920-h1080"></object>
-                </div>
+            <div class="album-box" style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 25px 15px;">
+                
+                <!-- First Shared Photo -->
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczPg-RawnvLkAEANThtBRYiULcTDi2pHAG26i7oVNfg_Iohuw7KtWww-5BkKn-ELkw2ODt2kMe2Iq86sG1GNU1DDNrkyUlkFHdaPDfdUj4TH94IdynY=w1000" 
+                     alt="Our Journey 1" 
+                     style="width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover;">
+                
+                <!-- Second Shared Photo -->
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczOQ9wYRHTnTqTNYBmu5MXXP-N_Xy5ASrO0o17SbDvwnxXObPi_MKXB7nUvfTLYJSIfLw1yHyRxhCsyl8aJi0Z0WQwAs-vgprX6SHrkHZip2NlMm4to=w1000" 
+                     alt="Our Journey 2" 
+                     style="width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover;">
+                
+                <p style="margin-top: 15px; font-weight: 600; font-size: 1.1rem; text-align: center;">
+                    <a href="https://photos.app.goo.gl/Vdq9L8PB9tYF7Zzm8" target="_blank" style="color: var(--accent-color); text-decoration: none; border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;">
+                        👉 Click here to open our full shared album! ❤️
+                    </a>
+                </p>
             </div>
 
         </div> <!-- End of container -->
@@ -495,10 +501,6 @@
                     mainContent.style.display = 'flex';
                     setTimeout(() => { 
                         mainContent.style.opacity = '1'; 
-                        // 🟢 FORCES GOOGLE PHOTOS TO LOAD DYNAMICALLY ONCE VISIBLE
-                        if(window.PA && window.PA.Player) {
-                            window.PA.Player.init(document.getElementById('my-google-photos-gallery'));
-                        }
                     }, 50);
                     startBlessingCounter();
                     playMusic();
@@ -583,6 +585,7 @@
             
             const randomX = Math.floor(Math.random() * 100) - 50;
             heart.style.setProperty('--x', `${randomX}px`);
+            heart.style.transform = 'translate(-50%, -50%)';
 
             document.body.appendChild(heart);
             setTimeout(() => { heart.remove(); }, 1000);
